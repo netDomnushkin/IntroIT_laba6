@@ -11,8 +11,12 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Менеджер задач")
         self.setBaseSize(500, 400)
+        self.init_ui()
+        self.connect_signals()
 
-        #Подготовка виджетов
+       
+    def init_ui(self):
+         #Подготовка виджетов
         self.newTask_label = QLabel("Новая задача")
         self.anountTask_label = QLabel("Количество задач: 0")
         self.taskName_input = QLineEdit()
@@ -21,11 +25,11 @@ class MainWindow(QMainWindow):
         self.deleteTask_button = QPushButton("Удалить задачу")
         self.clearAll_button = QPushButton("Очистить список")
         self.taskName_input.setPlaceholderText("Название задачи")
-
+        
         #Создание центрального виджета
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
+        
         #Создание слоев для добавления и удаления задач
         #Связывание слоев с соответствующими виджетами
         addTask_layout = QHBoxLayout()
@@ -34,7 +38,7 @@ class MainWindow(QMainWindow):
         deleteTask_layout = QHBoxLayout()
         deleteTask_layout.addWidget(self.deleteTask_button)
         deleteTask_layout.addWidget(self.clearAll_button)
-
+        
         #Создание главного слоя и привязка к нему других слоев и виджетов
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.newTask_label)
@@ -42,17 +46,19 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.task_list)
         main_layout.addLayout(deleteTask_layout)
         main_layout.addWidget(self.anountTask_label)
-
+        
         #Привязка главного слоя к центральному виджету
         central_widget.setLayout(main_layout)
 
+
+    def connect_signals(self):
         #Создание обработчиков нажатия кнопки для добавления задачи
         self.addTask_button.clicked.connect(self.add_task)
         self.taskName_input.returnPressed.connect(self.add_task)
-
+        
         #Создание обработчиков нажатия кнопки для удаления задачи
         self.deleteTask_button.clicked.connect(self.delete_task)
-
+        
         #Создание обработчика нажатия кнопки для очистки списка
         self.clearAll_button.clicked.connect(self.clear_tasks)
 
