@@ -50,6 +50,9 @@ class MainWindow(QMainWindow):
         self.addTask_button.clicked.connect(self.add_task)
         self.taskName_input.returnPressed.connect(self.add_task)
 
+        #Создание обработчиков нажатия кнопки для удаления задачи
+        self.deleteTask_button.clicked.connect(self.delete_task)
+
 
     #Функция для добавления задачи в список
     def add_task(self):
@@ -59,6 +62,17 @@ class MainWindow(QMainWindow):
             self.taskName_input.clear()
         else:
             QMessageBox.warning(self, "Ошибка", "Введите название задачи")
+
+    #Функция для удаления выбранной задачи из списка
+    def delete_task(self):
+        row = self.task_list.currentRow()
+        if row >= 0:
+            answer = QMessageBox.question(self, "Удаление", "Вы действительно хотите удалить задачу?")
+            if answer == QMessageBox.StandardButton.Yes:
+                self.task_list.takeItem(row)
+        else:
+            QMessageBox.warning(self, "Ошибка", "Задача не была выбрана")
+
         
 
        
