@@ -53,6 +53,9 @@ class MainWindow(QMainWindow):
         #Создание обработчиков нажатия кнопки для удаления задачи
         self.deleteTask_button.clicked.connect(self.delete_task)
 
+        #Создание обработчика нажатия кнопки для очистки списка
+        self.clearAll_button.clicked.connect(self.clear_tasks)
+
 
     #Функция для добавления задачи в список
     def add_task(self):
@@ -72,6 +75,19 @@ class MainWindow(QMainWindow):
                 self.task_list.takeItem(row)
         else:
             QMessageBox.warning(self, "Ошибка", "Задача не была выбрана")
+
+    #Функция для очистки списка
+    def clear_tasks(self):
+
+        if self.task_list.count() > 0:
+            answer = QMessageBox.question(self, "Удаление", "Вы действительно хотите очистить список?")
+            if answer == QMessageBox.StandardButton.Yes:
+                self.task_list.clear()
+        else:
+            QMessageBox.warning(self, "Ошибка", "Список пуст")
+
+        
+
 
         
 
