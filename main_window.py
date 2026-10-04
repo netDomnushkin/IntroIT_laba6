@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
 
         #Подготовка виджетов
         self.newTask_label = QLabel("Новая задача")
-        self.anountTask_label = QLabel("Количество задач")
+        self.anountTask_label = QLabel("Количество задач: 0")
         self.taskName_input = QLineEdit()
         self.addTask_button = QPushButton("Добавить задачу")
         self.task_list = QListWidget()
@@ -63,6 +63,7 @@ class MainWindow(QMainWindow):
         if text:
             self.task_list.addItem(text)
             self.taskName_input.clear()
+            self.update_counter()
         else:
             QMessageBox.warning(self, "Ошибка", "Введите название задачи")
 
@@ -73,18 +74,24 @@ class MainWindow(QMainWindow):
             answer = QMessageBox.question(self, "Удаление", "Вы действительно хотите удалить задачу?")
             if answer == QMessageBox.StandardButton.Yes:
                 self.task_list.takeItem(row)
+                self.update_counter()
         else:
             QMessageBox.warning(self, "Ошибка", "Задача не была выбрана")
 
     #Функция для очистки списка
     def clear_tasks(self):
-
         if self.task_list.count() > 0:
             answer = QMessageBox.question(self, "Удаление", "Вы действительно хотите очистить список?")
             if answer == QMessageBox.StandardButton.Yes:
                 self.task_list.clear()
+                self.update_counter()
         else:
             QMessageBox.warning(self, "Ошибка", "Список пуст")
+
+    #Функция для счета задач
+    def update_counter(self):
+        count = self.task_list.count();
+        self.anountTask_label.setText(f"Количество задач: {count}")
 
         
 
