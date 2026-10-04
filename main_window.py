@@ -2,9 +2,10 @@ from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtWidgets import QLabel
 from PyQt6.QtWidgets import QLineEdit
 from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtWidgets import QListWidget
+from PyQt6.QtWidgets import QListWidget, QListWidgetItem
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtCore import Qt
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -25,6 +26,8 @@ class MainWindow(QMainWindow):
         self.deleteTask_button = QPushButton("Удалить задачу")
         self.clearAll_button = QPushButton("Очистить список")
         self.taskName_input.setPlaceholderText("Название задачи")
+        self.doneTask_label = QLabel("Выполнено 0 задач")
+
         
         #Создание центрального виджета
         central_widget = QWidget()
@@ -46,6 +49,7 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.task_list)
         main_layout.addLayout(deleteTask_layout)
         main_layout.addWidget(self.anountTask_label)
+        main_layout.addWidget(self.doneTask_label)
         
         #Привязка главного слоя к центральному виджету
         central_widget.setLayout(main_layout)
@@ -62,12 +66,19 @@ class MainWindow(QMainWindow):
         #Создание обработчика нажатия кнопки для очистки списка
         self.clearAll_button.clicked.connect(self.clear_tasks)
 
+        #Создание обработчика для отметки выполненных задач
+        self.task_list.itemChanged.connect(self.update_done_count)
+
 
     #Функция для добавления задачи в список
     def add_task(self):
         text = self.taskName_input.text().strip()
         if text:
-            self.task_list.addItem(text)
+            #self.task_list.addItem(text)
+            #Состояние чекбокса устанавливается неотмеченным
+            item = QListWidgetItem(text)
+            item.setCheckState(Qt.CheckState.Unchecked)
+            self.task_list.addItem(item)
             self.taskName_input.clear()
             self.update_counter()
         else:
@@ -98,6 +109,14 @@ class MainWindow(QMainWindow):
     def update_counter(self):
         count = self.task_list.count();
         self.anountTask_label.setText(f"Количество задач: {count}")
+        self.update_done_count()
+
+    #Функция для подсчета отмеченных задач
+    def update_done_count(self):
+        done = sum(1 for i in range(self.task_list.count())
+            if self.task_list.item(i).checkState() == Qt.CheckState.Checked)
+        count = self.task_list.count();
+        self.doneTask_label.setText(f"Выполнено {done} из {count} задач")
 
         
 
